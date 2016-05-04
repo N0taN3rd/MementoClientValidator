@@ -1,13 +1,15 @@
 # Memento Client Validator
-A tool for those who are wanting to test their client applications in how 
-they interact with the memento framework.
-
-Replicates the behavior as described in [rfc7089](https://tools.ietf.org/html/rfc7089)
+A tool for testing your client applications for compliance to the [Memento Framework (RFC7089)](https://tools.ietf.org/html/rfc7089).
 
 Requires the [tornado](http://www.tornadoweb.org/en/stable/index.html) web framework and python3
 Which can be downloaded using pip
+## Installation
+This tool requires Python 3 and other packages that can be installed via:
+
 ```sh
-$ pip install tornado
+$ virtualenv mcv
+$ source mcv/bin/activate
+$ pip3 install -r requirements.txt
 ```
 
 ## Directory Structure
