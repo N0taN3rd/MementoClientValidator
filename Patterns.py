@@ -8,7 +8,7 @@ HEAD / HTTP/1.1
 '''
 
 get_link_1d1 = "<%s/1.1/>; rel=\"original timegate\",<%s/1.1/?version=all&style=timemap>; rel=\"timemap\"; " \
-               "type=\"application/link-format\"; from=\"Tue, 15 Sep 2000 11:28:26 GMT\"; until=\"Wed, 20 Jan 2010 " \
+               "type=\"application/link-format\"; from=\"Tue, 15 Sep 2000 11:28:26 GMT\"; until=\"Tue, 20 Mar 2001 13:36:10 GMT" \
                "09:34:33 GMT\"" % (
                    where, where)
 
@@ -79,6 +79,15 @@ ph = {
             "uri-r_required": "20010320133610",
             "headers": [
                 ("Memento-Datetime", "Tue, 20 Mar 2001 13:36:10 GMT"),
+                ("Link", get_link_1d1),
+                ("Connection", "close")
+            ]
+
+        },
+        "default": {
+            "response_code": 200,
+            "response": "OK",
+            "headers": [
                 ("Link", get_link_1d1),
                 ("Connection", "close")
             ]
@@ -420,27 +429,38 @@ ph = {
 
 
 class P1D1:
+    """
+       This class holds the headers for pattern 4.1.1
+       and the methods to get them
+    """
     headers = ph['1.1']
     pnum = "1.1"
 
     @classmethod
-    def get_headers(cls, http_handler):
-        g = cls.headers['GET']
-        for hk, hv in g["headers"]:
-            http_handler.set_header(hk, hv)
-        http_handler.set_status(g['response_code'], g['response'])
+    def default(cls, set_header, set_status):
+        d = cls.headers['default']
+        for hk, hv in d["headers"]:
+            set_header(hk, hv)
+        set_status(d['response_code'], d['response'])
 
     @classmethod
-    def is_get_required_uri(cls,urir):
+    def get_headers(cls, set_header, set_status):
+        g = cls.headers['GET']
+        for hk, hv in g["headers"]:
+            set_header(hk, hv)
+        set_status(g['response_code'], g['response'])
+
+    @classmethod
+    def is_memento_uri(cls, urir):
         r_urir = cls.headers['GET']["uri-r_required"]
         return r_urir == urir
 
     @classmethod
-    def head_headers(cls, http_handler):
+    def head_headers(cls, set_header, set_status):
         h = cls.headers['HEAD']
         for hk, hv in h["headers"]:
-            http_handler.set_header(hk, hv)
-        http_handler.set_status(h['response_code'], h['response'])
+            set_header(hk, hv)
+        set_status(h['response_code'], h['response'])
 
     @classmethod
     def head_timegate_response(cls, http_handler):
@@ -455,23 +475,30 @@ class P1D2:
     pnum = "1.2"
 
     @classmethod
+    def default(cls, set_header, set_status):
+        d = cls.headers['default']
+        for hk, hv in d["headers"]:
+            set_header(hk, hv)
+        set_status(d['response_code'], d['response'])
+
+    @classmethod
+    def get_headers(cls, set_header, set_status):
+        g = cls.headers['GET']
+        for hk, hv in g["headers"]:
+            set_header(hk, hv)
+        set_status(g['response_code'], g['response'])
+
+    @classmethod
     def is_get_required_uri(cls, urir):
         r_urir = cls.headers['GET']["uri-r_required"]
         return r_urir == urir
 
     @classmethod
-    def get_headers(cls, http_handler):
-        g = cls.headers['GET']
-        for hk, hv in g["headers"]:
-            http_handler.set_header(hk, hv)
-        http_handler.set_status(g['response_code'], g['response'])
-
-    @classmethod
-    def head_headers(cls, http_handler):
+    def head_headers(cls, set_header, set_status):
         h = cls.headers['HEAD']
         for hk, hv in h["headers"]:
-            http_handler.set_header(hk, hv)
-        http_handler.set_status(h['response_code'], h['response'])
+            set_header(hk, hv)
+        set_status(h['response_code'], h['response'])
 
     @classmethod
     def head_timegate_response(cls, http_handler):

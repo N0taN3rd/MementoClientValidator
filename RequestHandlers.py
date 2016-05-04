@@ -6,18 +6,28 @@ from Patterns import P1D1,P1D2,P1D3
 
 
 class P1d1Handler(RequestHandler, P1D1):
+    """
+    RequestHandler for pattern 4.1.1
+
+    Subclass P1D1 as well as tornado.web.RequestHandlers
+    are spawned per request and do not persist state
+    so by making the actions surrounding the headers
+    tied to classmethods and class variables.
+    The logic in the patterns and how the request is served
+    can be separate
+    """
     def data_received(self, chunk):
         pass
 
     @tornado.web.asynchronous
     def head(self, path):
         v = self.get_argument("version", None)
-        self.head_headers(self)
+        self.head_headers(self.set_header, self.set_status)
         if path == '/' or path == '':
             self.render("default.html", title="Default Head Pattern 4.1.1",
                         items=['You Asked For Head'])
         else:
-            if v is not None and self.is_get_required_uri(v):
+            if v is not None and self.is_memento_uri(v):
                 self.render("pattern4-1.html", title="Pattern 4.1.1")
             else:
                 self.render("bad.html", title="Bad URI-R",
@@ -30,8 +40,8 @@ class P1d1Handler(RequestHandler, P1D1):
         t = self.get_argument("style", "not")
         vv = v if v is not None else "Nothing"
         if v is not None:
-            if self.is_get_required_uri(v):
-                self.get_headers(self)
+            if self.is_memento_uri(v):
+                self.get_headers(self.set_header, self.set_status)
                 self.render("pattern4-1.html", title="Pattern 4.1.1")
             else:
                 if v == 'all' and t == 'timemap':
@@ -41,10 +51,12 @@ class P1d1Handler(RequestHandler, P1D1):
                     self.write(content)
                     self.finish()
                 else:
+                    self.default(self.set_header, self.set_status)
                     self.render("bad.html", title="Bad URI-R",
                                 items=['required URI-R %s' % '1.1/?version=20010320133610',
                                        'received URI-R %s %s' % (path, vv)])
         else:
+            self.default(self.set_header, self.set_status)
             self.render("default.html", title="Default Get Pattern 4.1.1",
                         items=['You Asked For Get'])
 
@@ -56,7 +68,7 @@ class P1d2Handler(RequestHandler, P1D2):
     @tornado.web.asynchronous
     def head(self, path):
         v = self.get_argument("version", None)
-        self.head_headers(self)
+        self.head_headers(self.set_header, self.set_status)
         if path == '/' or path == '':
             self.render("default.html", title="Default Head Pattern 4.1.2",
                         items=['You Asked For Head'])
@@ -74,13 +86,14 @@ class P1d2Handler(RequestHandler, P1D2):
         vv = v if v is not None else "Nothing"
         if v is not None:
             if self.is_get_required_uri(v):
-                self.get_headers(self)
+                self.get_headers(self.set_header, self.set_status)
                 self.render("pattern4-1.html", title="Pattern 4.1.1")
             else:
                 self.render("bad.html", title="Bad URI-R",
                             items=['required URI-R %s' % '1.1/?version=20010320133610',
                                    'received URI-R %s %s' % (path, vv)])
         else:
+            self.default(self.set_header, self.set_status)
             self.render("default.html", title="Default Get Pattern 4.1.1",
                         items=['You Asked For Get'])
 
