@@ -1,5 +1,6 @@
-where = "localhost:8000"
+from tornado.options import options
 
+where = "localhost:%d" % options.port
 '''
 HEAD / HTTP/1.1
    Host: a.example.org
@@ -489,7 +490,7 @@ class P1D2:
         set_status(g['response_code'], g['response'])
 
     @classmethod
-    def is_get_required_uri(cls, urir):
+    def is_memento_uri(cls, urir):
         r_urir = cls.headers['GET']["uri-r_required"]
         return r_urir == urir
 

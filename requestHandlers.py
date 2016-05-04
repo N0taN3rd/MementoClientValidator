@@ -2,7 +2,7 @@ import tornado.web
 from tornado.web import RequestHandler
 
 
-from Patterns import P1D1,P1D2,P1D3
+from patterns import P1D1, P1D2, P1D3
 
 
 class P1d1Handler(RequestHandler, P1D1):
@@ -73,7 +73,7 @@ class P1d2Handler(RequestHandler, P1D2):
             self.render("default.html", title="Default Head Pattern 4.1.2",
                         items=['You Asked For Head'])
         else:
-            if v is not None and self.is_get_required_uri(v):
+            if v is not None and self.is_memento_uri(v):
                 self.render("pattern4-2.html", title="Pattern 4.1.2")
             else:
                 self.render("bad.html", title="Bad URI-R",
@@ -85,7 +85,7 @@ class P1d2Handler(RequestHandler, P1D2):
         v = self.get_argument("version", None)
         vv = v if v is not None else "Nothing"
         if v is not None:
-            if self.is_get_required_uri(v):
+            if self.is_memento_uri(v):
                 self.get_headers(self.set_header, self.set_status)
                 self.render("pattern4-1.html", title="Pattern 4.1.1")
             else:

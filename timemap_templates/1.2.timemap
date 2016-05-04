@@ -1,0 +1,3 @@
+<{$replace}/1.2>; rel="original timegate",
+<{$replace}/1.2/?version=all&style=timemap>; rel="self"; type="application/link-format"; from="Tue, 20 Mar 2001 13:36:10 GMT"; until="Tue, 20 Mar 2001 13:36:10 GMT",
+<{$replace}/1.2/?version=20010320133610>; rel="first last memento"; datetime="Tue, 20 Mar 2001 13:36:10 GMT"
