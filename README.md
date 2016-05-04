@@ -4,6 +4,11 @@ they interact with the memento framework.
 
 Replicates the behavior as described in [rfc7089](https://tools.ietf.org/html/rfc7089)
 
+Requires the [tornado](http://www.tornadoweb.org/en/stable/index.html) web framework and python3
+Which can be downloaded using pip
+```sh
+$ pip install tornado
+```
 
 ## Directory Structure
 - static: holds static resources served to the rendered templates
