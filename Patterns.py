@@ -93,7 +93,6 @@ ph = {
                 ("Content-Location", "%s/1.2/?version=20010320133610" % where),
                 ("Memento-Datetime", "Tue, 20 Mar 2001 13:36:10 GMT"),
                 ("Link", link_1d2),
-
                 ("Connection", "close")
             ]
         },
@@ -105,7 +104,6 @@ ph = {
                 ("Content-Location", "%s/1.2/?version=20010320133610" % where),
                 ("Memento-Datetime", "Tue, 20 Mar 2001 13:36:10 GMT"),
                 ("Link", link_1d2),
-
                 ("Connection", "close")
             ]
         }

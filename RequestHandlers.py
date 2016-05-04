@@ -58,14 +58,14 @@ class P1d2Handler(RequestHandler, P1D2):
         v = self.get_argument("version", None)
         self.head_headers(self)
         if path == '/' or path == '':
-            self.render("default.html", title="Default Head Pattern 4.1.1",
+            self.render("default.html", title="Default Head Pattern 4.1.2",
                         items=['You Asked For Head'])
         else:
             if v is not None and self.is_get_required_uri(v):
-                self.render("pattern4-1.html", title="Pattern 4.1.1")
+                self.render("pattern4-2.html", title="Pattern 4.1.2")
             else:
                 self.render("bad.html", title="Bad URI-R",
-                            items=['required URI-R %s' % '1.1/?version=20010320133610',
+                            items=['required URI-R %s' % '1.2/?version=20010320133610',
                                    'received URI-R %s %s' % (path, v if v is not None else "Nothing")])
 
     @tornado.web.asynchronous
