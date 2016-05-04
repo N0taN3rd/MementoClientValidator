@@ -63,3 +63,7 @@ target/
 
 #idea files
 .idea/
+
+#generated timemap files
+timemaps/
+
