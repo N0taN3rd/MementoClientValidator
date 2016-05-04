@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+    <link rel="stylesheet" type="text/css" href= "{{static_url("style.css")}}" >
+    <script type="text/javascript" src="{{static_url("functions.js")}}"> </script>
+</head>
+<body onload="addHeaderTags()">
+<pre>
+<span class="h3"><a class="selflink" name="section-4.1" href="#section-4.1">4.1</a>.  Pattern 1 - The Original Resource Acts as Its Own TimeGate</span>
+
+   In this implementation pattern, the Original Resource acts as its own
+   TimeGate, which means that URI-R and URI-G coincide.  Content
+   management systems and revision control systems can support datetime
+   negotiation in this way as they are commonly aware of the version
+   history of their own resources.
+
+   The response to this request when datetime negotiation for this
+   resource is supported depends on the negotiation style it uses (200-
+   style or 302-style) and on the existence or absence of a URI-M for
+   Mementos that is distinct from the URI-R of the associated Original
+   Resource.  The various cases are summarized in the below table, and
+   the server responses for each are detailed in the remainder of this
+   section.
+
+
+
+
+
+
+
+
+<span class="grey">Van de Sompel, et al.         Informational                    [Page 15]</span></pre>
+<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-16" id="page-16" href="#page-16" class="invisible"> </a>
+<span class="grey"><a href="https://tools.ietf.org/html/rfc7089">RFC 7089</a>                      HTTP Memento                 December 2013</span>
+
+
+   +-------------------+------------+----------+---------+-------------+
+   |      Pattern      |  Original  | TimeGate | Memento | Negotiation |
+   |                   |  Resource  |          |         |    Style    |
+   +-------------------+------------+----------+---------+-------------+
+   |    Pattern 1.1    |    URI-R   |   URI-R  |  URI-M  |     302     |
+   |  (<a href="https://tools.ietf.org/html/rfc7089#section-4.1.1">Section 4.1.1</a>)  |            |          |         |             |
+   |    Pattern 1.2    |    URI-R   |   URI-R  |  URI-M  |     200     |
+   |  (<a href="https://tools.ietf.org/html/rfc7089#section-4.1.2">Section 4.1.2</a>)  |            |          |         |             |
+   |    Pattern 1.3    |    URI-R   |   URI-R  |  URI-R  |     200     |
+   |  (<a href="https://tools.ietf.org/html/rfc7089#section-4.1.3">Section 4.1.3</a>)  |            |          |         |             |
+   +-------------------+------------+----------+---------+-------------+
+
+                            Table 1: Pattern 1
+
+<span class="h4"><a class="selflink" name="section-4.1.1" href="#section-4.1.1">4.1.1</a>.  Pattern 1.1 - URI-R=URI-G; 302-Style Negotiation; Distinct URI-M</span>
+
+   In this case, the response to the user agent's request of Figure 4
+   has a "302 Found" HTTP status code, and the "Location" header conveys
+   the URI-M of the selected Memento.  The use of Memento response
+   headers and links in the response from URI-R=URI-G is as follows:
+
+   o  The "Vary" header MUST be provided, and it MUST include the
+      "accept-datetime" value.
+
+   o  The response MUST NOT contain a "Memento-Datetime" header.
+
+   o  The "Link" header MUST be provided, and it MUST contain at least a
+      link with the "original" Relation Type that has the URI-R of the
+      Original Resource as Target IRI.  The provision of other links is
+      encouraged and is subject to the considerations described in
+      <a href="https://tools.ietf.org/html/rfc7089#section-2.2">Section 2.2</a>.
+
+   The server's response to the request of Figure 4 is shown in
+   Figure 5.  Note the inclusion of the recommended link to the TimeGate
+   that, in this case, has a Target IRI that is the URI-R of the
+   Original Resource.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="grey">Van de Sompel, et al.         Informational                    [Page 16]</span></pre>
+<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-17" id="page-17" href="#page-17" class="invisible"> </a>
+<span class="grey"><a href="https://tools.ietf.org/html/rfc7089">RFC 7089</a>                      HTTP Memento                 December 2013</span>
+
+
+   HTTP/1.1 302 Found
+   Date: Thu, 21 Jan 2010 00:06:50 GMT
+   Server: Apache
+   Vary: accept-datetime
+   Location:
+    http://a.example.org/?version=20010320133610
+   Link: &lt;http://a.example.org/&gt;; rel="original timegate"
+   Content-Length: 0
+   Content-Type: text/plain; charset=UTF-8
+   Connection: close
+
+            Figure 5: Response from URI-R=URI-G for Pattern 1.1
+
+   In a subsequent request, shown in Figure 6, the user agent can obtain
+   the selected Memento by issuing an HTTP GET request against the URI-M
+   that was provided in the "Location" header.  The inclusion of the
+   "Accept-Datetime" header in this request is not needed but will
+   typically occur as the user agent is in datetime negotiation mode.
+
+   GET /?version=20010320133610 HTTP/1.1
+   Host: a.example.org
+   Accept-Datetime: Tue, 20 Mar 2001 20:35:00 GMT
+   Connection: close
+
+              Figure 6: User Agent Requests Selected Memento
+
+   The response has a "200 OK" HTTP status code, and the entity-body of
+   the response contains the representation of the selected Memento.
+   The use of Memento response headers and links in the response from
+   URI-M is as follows:
+
+   o  A "Vary" header that includes an "accept-datetime" value MUST NOT
+      be provided.
+
+   o  The response MUST include a "Memento-Datetime" header.  Its value
+      expresses the archival datetime of the Memento.
+
+   o  The "Link" header MUST be provided, and it MUST contain at least a
+      link with the "original" Relation Type that has the URI-R of the
+      Original Resource as Target IRI.  The provision of other links is
+      encouraged and is subject to the considerations described in
+      <a href="https://tools.ietf.org/html/rfc7089#section-2.2">Section 2.2</a>.
+
+   The server's response to the request of Figure 6 is shown in
+   Figure 7.  Note the provision of the required "original", and the
+   recommended "timegate" and "timemap" links.  The former two point to
+
+
+
+
+
+<span class="grey">Van de Sompel, et al.         Informational                    [Page 17]</span></pre>
+<hr class='noprint' style='width: 96ex;' align='left'/><!--NewPage--><pre class='newpage'><a name="page-18" id="page-18" href="#page-18" class="invisible"> </a>
+<span class="grey"><a href="https://tools.ietf.org/html/rfc7089">RFC 7089</a>                      HTTP Memento                 December 2013</span>
+
+
+   the Original Resource, which acts as its own TimeGate.  The latter
+   has "from" and "until" attributes to indicate the temporal interval
+   covered by Mementos listed in the linked TimeMap.
+
+   HTTP/1.1 200 OK
+   Date: Thu, 21 Jan 2010 00:06:51 GMT
+   Server: Apache-Coyote/1.1
+   Memento-Datetime: Tue, 20 Mar 2001 13:36:10 GMT
+   Link: &lt;http://a.example.org/&gt;; rel="original timegate",
+    &lt;http://a.example.org/?version=all&amp;style=timemap&gt;
+      ; rel="timemap"; type="application/link-format"
+      ; from="Tue, 15 Sep 2000 11:28:26 GMT"
+      ; until="Wed, 20 Jan 2010 09:34:33 GMT"
+   Content-Length: 23364
+   Content-Type: text/html;charset=utf-8
+   Connection: close
+
+               Figure 7: Response from URI-M for Pattern 1.1
+</pre>
+</body>
+</html>
