@@ -2,6 +2,7 @@ import tornado.web
 from tornado.web import RequestHandler
 
 
+
 from patterns import P1D1, P1D2, P1D3
 
 
@@ -22,22 +23,31 @@ class P1d1Handler(RequestHandler, P1D1):
     @tornado.web.asynchronous
     def head(self, path):
         v = self.get_argument("version", None)
-        self.head_headers(self.set_header, self.set_status)
-        if path == '/' or path == '':
-            self.render("default.html", title="Default Head Pattern 4.1.1",
-                        items=['You Asked For Head'])
+        t = self.get_argument("style", None)
+        if v == 'all' and t == 'timemap':
+            self.set_header("Content-Type", "text/plain; charset=UTF-8")
+            self.write(self.timemap)
+            self.finish()
         else:
-            if v is not None and self.is_memento_uri(v):
-                self.render("pattern4-1.html", title="Pattern 4.1.1")
+            self.head_headers(self.set_header, self.set_status)
+            if path == '/' or path == '':
+                self.render("default.html", title="Default Head Pattern 4.1.1",
+                            items=['You Asked For Head'])
+
             else:
-                self.render("bad.html", title="Bad URI-R",
-                            items=['required URI-R %s' % '1.1/?version=20010320133610',
-                                   'received URI-R %s %s' % (path, v if v is not None else "Nothing")])
+                if v is not None and self.is_memento_uri(v):
+                    self.render("pattern4-1.html", title="Pattern 4.1.1")
+                else:
+                    self.render("bad.html", title="Bad URI-R",
+                                items=['required URI-R %s' % '1.1/?version=20010320133610',
+                                       'received URI-R %s %s' % (path, v if v is not None else "Nothing")])
 
     @tornado.web.asynchronous
-    def get(self, path):
+    def get(self,path):
+        print(path)
         v = self.get_argument("version", None)
-        t = self.get_argument("style", "not")
+        t = self.get_argument("style", None)
+        print(self.request.full_url())
         vv = v if v is not None else "Nothing"
         if v is not None:
             if self.is_memento_uri(v):
@@ -45,16 +55,14 @@ class P1d1Handler(RequestHandler, P1D1):
                 self.render("pattern4-1.html", title="Pattern 4.1.1")
             else:
                 if v == 'all' and t == 'timemap':
-                    with open('timemaps/1.1.timemap', 'r') as content_file:
-                        content = "".join(line for line in content_file)
-                    print(content)
-                    self.write(content)
+                    self.write(self.timemap)
+                    self.set_header("Content-Type", "text/plain; charset=UTF-8")
                     self.finish()
                 else:
                     self.default(self.set_header, self.set_status)
                     self.render("bad.html", title="Bad URI-R",
                                 items=['required URI-R %s' % '1.1/?version=20010320133610',
-                                       'received URI-R %s %s' % (path, vv)])
+                                       'received URI-R %s %s' % (" ", vv)])
         else:
             self.default(self.set_header, self.set_status)
             self.render("default.html", title="Default Get Pattern 4.1.1",
@@ -83,19 +91,15 @@ class P1d2Handler(RequestHandler, P1D2):
     @tornado.web.asynchronous
     def get(self, path):
         v = self.get_argument("version", None)
+        t = self.get_argument("style", "not")
         vv = v if v is not None else "Nothing"
-        if v is not None:
-            if self.is_memento_uri(v):
-                self.get_headers(self.set_header, self.set_status)
-                self.render("pattern4-1.html", title="Pattern 4.1.1")
-            else:
-                self.render("bad.html", title="Bad URI-R",
-                            items=['required URI-R %s' % '1.1/?version=20010320133610',
-                                   'received URI-R %s %s' % (path, vv)])
+        if v == 'all' and t == 'timemap':
+            self.write(self.timemap)
+            self.set_header("Content-Type", "text/plain; charset=UTF-8")
+            self.finish()
         else:
-            self.default(self.set_header, self.set_status)
-            self.render("default.html", title="Default Get Pattern 4.1.1",
-                        items=['You Asked For Get'])
+            self.get_headers(self.set_header, self.set_status)
+            self.render("pattern4-2.html", title="Pattern 4.1.2")
 
 
 class P1d3Handler(RequestHandler, P1D3):
@@ -103,11 +107,25 @@ class P1d3Handler(RequestHandler, P1D3):
         pass
 
     @tornado.web.asynchronous
-    def head(self):
-        self.head_headers(self)
-        self.finish()
+    def head(self,path):
+        v = self.get_argument("version", None)
+        t = self.get_argument("style", "not")
+        if v == 'all' and t == 'timemap':
+            self.write(self.timemap)
+            self.set_header("Content-Type", "text/plain; charset=UTF-8")
+            self.finish()
+        else:
+            self.head_headers(self.set_header, self.set_status)
+            self.render("pattern4-3.html", title="Pattern 4.1.3")
 
     @tornado.web.asynchronous
-    def get(self):
-        self.get_headers(self)
-        self.finish()
+    def get(self,path):
+        v = self.get_argument("version", )
+        t = self.get_argument("style", "not")
+        if v == 'all' and t == 'timemap':
+            self.write(self.timemap)
+            self.set_header("Content-Type", "text/plain; charset=UTF-8")
+            self.finish()
+        else:
+            self.get_headers(self.set_header, self.set_status)
+            self.render("pattern4-3.html", title="Pattern 4.1.3")

@@ -3,6 +3,7 @@ import os
 
 from tornado.options import options
 
+
 def generate_configured_timemaps():
     where = "localhost:%d" % options.port
     dirname = os.path.dirname(__file__)

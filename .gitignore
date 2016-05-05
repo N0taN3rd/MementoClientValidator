@@ -66,4 +66,4 @@ target/
 
 #generated timemap files
 timemaps/
-
+static/*.timemap
