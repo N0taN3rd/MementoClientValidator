@@ -17,6 +17,7 @@ $ pip3 install -r requirements.txt
 ```sh
 $ python3 main.py
 ```
+Then from your curl/browser/script access `localhost:8000/1.1/` to test Memento Pattern 1.1 (for example).
 
 ## Directory Structure
 - static: holds static resources served to the rendered templates
