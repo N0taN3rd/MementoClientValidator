@@ -12,6 +12,12 @@ $ source mcv/bin/activate
 $ pip3 install -r requirements.txt
 ```
 
+## Running
+
+```sh
+$ python3 main.py
+```
+
 ## Directory Structure
 - static: holds static resources served to the rendered templates
 - templates: holds html template files. These are [tornado templates](http://www.tornadoweb.org/en/stable/template.html) 
